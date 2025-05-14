@@ -71,5 +71,5 @@ def main():
 if __name__=="__main__":
     main()
 
-# Space complexity O(1)
+# Space complexity O(h)
 # Time complexity O(n)
