@@ -111,40 +111,47 @@ class Solution2:
             parents[neighbor] = parents[city]
 
     """
-    def find_circle(self, is_connected):
-        print("Start")
-        cities_len = len(is_connected)
-        parents = list(range(cities_len))
-        rank = [1] * cities_len
-
-
-        def find_root(city):
-            if city != parents[city]:
-                parents[city] = find_root(parents[city])
-            return parents[city] 
-
-
-        def merge_cities(city1, city2):
-            root_of_city1 = find_root(city1)
-            root_of_city2 = find_root(city2)
-
-            if rank[root_of_city1] > rank[root_of_city2]:
-                parents[city2] = root_of_city1
-            if rank[root_of_city1] > rank[root_of_city2]:
-                parents[city1] = root_of_city2
-            parents[city2] = root_of_city1
-            rank[root_of_city1] +=1
-
-
-        for city in range(cities_len):
-            print(f"Checking city: {city}")
-            for neighbor in range(cities_len):
-                if is_connected[city][neighbor] and parents[city] != parents[neighbor]:
-                    merge_cities(city, neighbor)
-
-        return sum(1 for city in range(cities_len) if parents[city] == city)
-
-
+    def find_circle(self, isConnected):
+        number_of_cities = len(isConnected)
+        
+        # Initialize with optimized Union-Find data structure
+        parent_city = list(range(number_of_cities))
+        tree_height = [0] * number_of_cities
+        
+        # Find the root province representative with path compression
+        def find_province_representative(city):
+            print(parent_city)
+            if parent_city[city] != city:
+                parent_city[city] = find_province_representative(parent_city[city])  # Path compression
+            return parent_city[city]
+        
+        # Merge two provinces by rank to optimize tree height
+        def merge_provinces(city1, city2):
+            root_of_city1 = find_province_representative(city1)
+            root_of_city2 = find_province_representative(city2)
+            
+            if root_of_city1 == root_of_city2:
+                return  # Already in the same province
+            
+            # Union by rank to keep the tree balanced
+            if tree_height[root_of_city1] < tree_height[root_of_city2]:
+                parent_city[root_of_city1] = root_of_city2
+            elif tree_height[root_of_city1] > tree_height[root_of_city2]:
+                parent_city[root_of_city2] = root_of_city1
+            else:
+                parent_city[root_of_city2] = root_of_city1
+                tree_height[root_of_city1] += 1
+        
+        # Process all connections between cities
+        for city1 in range(number_of_cities):
+            for city2 in range(number_of_cities):
+                if isConnected[city1][city2] == 1:
+                    merge_provinces(city1, city2)
+        
+        # Count unique province representatives
+        total_provinces = sum(1 for city in range(number_of_cities) 
+                             if parent_city[city] == city)
+        return total_provinces
 
 if __name__=="__main__":
     solution = Solution2()
