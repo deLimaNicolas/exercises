@@ -24,9 +24,8 @@
 #                     6
 #               [1, 10, 5, 10, 2, 4]
                  #6  20  16  12 4  4
+from typing import List
 
-
-#Constraints:
 class Solution:
     def maxArea(self, height: List[int]) -> int:
         left = 0
