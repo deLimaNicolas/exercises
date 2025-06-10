@@ -1,17 +1,23 @@
 class Solution:
     def permute(self, nums: List[int]) -> List[List[int]]:
-        self.res = []
-        self.backtrack([], nums, [False] * len(nums))
-        return self.res
+        res = []
+        curr = []
+        n = len(nums)
+        added = set()
 
-    def backtrack(self, perm: List[int], nums: List[int], pick: List[bool]):
-        if len(perm) == len(nums):
-            self.res.append(perm[:])
-            return
-        for i in range(len(nums)):
-            if not pick[i]:
-                perm.append(nums[i])
-                pick[i] = True
-                self.backtrack(perm, nums, pick)
-                perm.pop()
-                pick[i] = False
+        def dfs(curr, xlen):
+            if xlen ==  n:
+                res.append(curr[:])
+                return
+            
+            for num in nums:
+                if not num in added:
+                    added.add(num)
+                    curr.append(num)
+                    dfs(curr, xlen + 1)
+                    added.remove(num)
+                    curr.pop()
+
+        dfs([], 0)
+        return res
+
