@@ -4,21 +4,31 @@
 #         self.val = val
 #         self.next = next
 class Solution:
+    def reverseList(self, head):
+        prev, cur = None, head
+        while cur:
+            tmp = cur.next
+            cur.next = prev
+            prev = cur
+            cur = tmp
+        
+        return prev
+
     def pairSum(self, head: Optional[ListNode]) -> int:
-        slow, fast = head, head
-        prev = None
+        res = float("-inf")
+        slow = fast = head
 
-        while fast and fast.next:
-            fast = fast.next.next
-            tmp = slow.next
-            slow.next = prev
-            prev = slow
-            slow = tmp
-
-        res = 0
-        while slow:
-            res = max(res, prev.val + slow.val)
-            prev = prev.next
+        while fast:
             slow = slow.next
+            fast = fast.next.next
 
+        reversedHead = self.reverseList(slow)
+        
+        left, right = head, reversedHead
+
+        while right:
+            res = max(res, (left.val + right.val))
+            left = left.next
+            right = right.next
+        
         return res
