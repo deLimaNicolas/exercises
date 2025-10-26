@@ -67,9 +67,37 @@ def getMaximumEfficiency(connect_nodes, connect_from, connect_to, computer_val, 
     Returns:
         int: Maximum possible efficiency
     """
-    # Your code here
-    pass
+    from collections import defaultdict
 
+    adj = defaultdict(list)
+    for idx in range(len(connect_from)):
+        src = connect_from[idx] - 1
+        dst = connect_to[idx] - 1
+
+        adj[src].append(dst)
+        adj[dst].append(src)
+    #(sum of values of all remaining computer nodes - k * num_ops).
+    visited = set()
+    def get_max(node):
+        visited.add(node)
+        take_sum = computer_val[node]
+        delete_ops = 0
+
+        for child in adj[node]:
+            if child not in visited:
+                take_child_sum, take_child_ops = get_max(child)
+                take_child_efficiency = take_child_sum - k * take_child_ops
+                delete_child_efficiency = -k
+                if take_child_efficiency >= delete_child_efficiency:
+                    take_sum += take_child_sum
+                    delete_ops += take_child_ops
+                else:
+                    delete_ops += 1
+
+        return take_sum, delete_ops
+
+    total_sum, total_ops = get_max(0)
+    return total_sum - k * total_ops
 
 # ============================================================================
 # TEST CASES
@@ -115,7 +143,7 @@ def run_tests():
     connect_to = [2, 3]
     computer_val = [-5, -10, -15]
     k = 1
-    expected = -5  # Keep only root, delete child subtree
+    expected = -6  # Keep only root, delete child subtree
     result = getMaximumEfficiency(connect_nodes, connect_from, connect_to, computer_val, k)
     print(f"Input: nodes={connect_nodes}, edges={list(zip(connect_from, connect_to))}")
     print(f"Values: {computer_val}, k={k}")
