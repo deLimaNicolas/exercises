@@ -120,7 +120,7 @@ def run_tests():
     print(f"Expected: {expected}")
     print(f"Got: {result}")
     print(f"Status: {'✓ PASS' if result == expected else '✗ FAIL'}\n")
-    
+
     # Test Case 2: All positive values - should keep everything
     print("Test Case 2: All positive values")
     connect_nodes = 3
@@ -135,7 +135,7 @@ def run_tests():
     print(f"Expected: {expected}")
     print(f"Got: {result}")
     print(f"Status: {'✓ PASS' if result == expected else '✗ FAIL'}\n")
-    
+
     # Test Case 3: All negative values with low k
     print("Test Case 3: All negative values, low deletion cost")
     connect_nodes = 3
