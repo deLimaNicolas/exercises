@@ -21,3 +21,21 @@ class Solution:
             heapq.heappush(pq, (to, num_pass))
 
         return True
+class Solution:
+    def carPooling(self, trips: List[List[int]], capacity: int) -> bool:
+        events = []
+
+        for num, start, end in trips:
+            events.append((start, num))    # people get in
+            events.append((end, -num))     # people get out
+
+        events.sort()
+
+        current = 0
+        for _, change in events:
+            current += change
+            if current > capacity:
+                return False
+
+        return True
+
