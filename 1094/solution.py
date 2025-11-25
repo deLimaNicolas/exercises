@@ -39,3 +39,22 @@ class Solution:
 
         return True
 
+class Solution:
+    def carPooling(self, trips: List[List[int]], capacity: int) -> bool:
+        timeline = {}
+        max_km = 0
+
+        for num, start, end in trips:
+            timeline[start] = timeline.get(start, 0) + num
+            timeline[end] = timeline.get(end, 0) - num
+            if end > max_km:
+                max_km = end
+
+        current = 0
+        for km in range(0, max_km + 1):
+            if km in timeline:
+                current += timeline[km]
+            if current > capacity:
+                return False
+
+        return True
