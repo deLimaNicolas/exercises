@@ -96,3 +96,21 @@ class Solution:
                         dp[i][v] = max(dp[i][v], dp[j][v - 1] + 1)
         
         return max(max(row) for row in dp)
+class Solution:
+    def maximumLength(self, nums: List[int], k: int) -> int:
+        @cache
+        def rec(i, violations):
+            best = 1
+
+            for j in range(i + 1, len(nums)):
+                if nums[i] == nums[j]:
+                    best = max(best, rec(j, violations) + 1)
+                elif violations < k:
+                    best = max(best, rec(j, violations + 1) + 1)
+            return best
+
+        res = 0
+        for i in range(len(nums)):
+            res = max(res, rec(i, 0))
+        
+        return res
